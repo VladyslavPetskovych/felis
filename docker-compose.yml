@@ -1,0 +1,18 @@
+name: felis-app
+
+services:
+  tgbot:
+    build:
+      context: ./telegramBot
+    environment:
+      - BOT_TOKEN=${TG_BOT_TOKEN}
+    volumes:
+      - ./telegramBot:/app
+      - /app/node_modules
+    networks:
+      - felis-app
+    restart: unless-stopped
+
+networks:
+  felis-app:
+    driver: bridge
