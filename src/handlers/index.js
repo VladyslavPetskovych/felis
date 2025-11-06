@@ -6,6 +6,7 @@ function register(bot) {
   require("./feedback").register(bot);
   require("./contacts").register(bot);
   require("./lunches").register(bot);
+  require("./phone").register(bot);
 }
 
 module.exports = { register };

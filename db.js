@@ -7,6 +7,7 @@ const kPhone = (num) => `phone:${num}`;
 const idxPhones = "idx:phones";
 
 async function ensureIndexes() {
+  if (process.env.REDISEARCH !== "1") return; // guard: only attempt if explicitly enabled
   try {
     await redis.call("FT.INFO", idxPhones);
     return;
