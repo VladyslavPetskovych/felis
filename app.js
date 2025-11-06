@@ -27,4 +27,12 @@ if (!startHandler || typeof startHandler.register !== "function") {
 
 startHandler.register(bot);
 
+// Register start menu button handlers
+const handlers = require("./src/handlers");
+if (!handlers || typeof handlers.register !== "function") {
+  console.error("❌ Не вдалося підключити handlers з src/handlers");
+  process.exit(1);
+}
+handlers.register(bot);
+
 console.log("✅ Додаток запущено, start handler підключений.");
