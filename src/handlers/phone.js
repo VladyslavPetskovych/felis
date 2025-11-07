@@ -1,24 +1,22 @@
 const { storage, normalizePhone } = require("../utils/storage");
+const {
+  translate,
+  getBackMenuKeyboard,
+  getButtonLabel,
+  isButtonMatch,
+  DEFAULT_LANGUAGE,
+} = require("../i18n");
 
-const BACK_MENU = {
-  reply_markup: {
-    keyboard: [["⬅️ Назад"], ["Головне меню"]],
-    resize_keyboard: true,
-  },
-};
-
-function requestContactKeyboard() {
+function requestContactKeyboard(language) {
   return {
     reply_markup: {
       keyboard: [
         [
           {
-            text: "📱 Поділитись номером",
+            text: getButtonLabel(language, "sharePhone"),
             request_contact: true,
           },
         ],
-        ["⬅️ Назад"],
-        ["Головне меню"],
       ],
       resize_keyboard: true,
       one_time_keyboard: true,
@@ -26,20 +24,24 @@ function requestContactKeyboard() {
   };
 }
 
-function buildSavedMessage(user) {
-  const who = user.name || user.username || user.chatId;
-  return `Дякуємо, ${who}! ✅\nЗберегли ваш номер: ${user.phone}`;
+function buildSavedMessage(user, fallbackLanguage) {
+  const language = user?.language || fallbackLanguage || DEFAULT_LANGUAGE;
+  const who = user?.name || user?.username || user?.chatId;
+  return translate(language, "phone.saved", { who, phone: user?.phone || "" });
 }
 
 function register(bot) {
   bot.on("message", async (msg) => {
-    const text = msg.text || "";
+    if (msg && msg._handledByAdmin) return;
 
-    if (text === "/phone" || text === "📱 Залишити номер") {
+    const text = msg.text || "";
+    const language = await storage.getUserLanguage(msg.chat.id);
+
+    if (text === "/phone" || isButtonMatch(text, "leavePhone")) {
       bot.sendMessage(
         msg.chat.id,
-        "Надішліть номер телефону, або натисніть кнопку нижче:",
-        requestContactKeyboard()
+        translate(language, "phone.request"),
+        requestContactKeyboard(language)
       );
       return;
     }
@@ -50,8 +52,8 @@ function register(bot) {
       if (!normalized) {
         bot.sendMessage(
           msg.chat.id,
-          "Не вдалося розпізнати номер. Введіть, будь ласка, у форматі +380XXXXXXXXX.",
-          BACK_MENU
+          translate(language, "phone.invalid"),
+          getBackMenuKeyboard(language)
         );
         return;
       }
@@ -61,7 +63,12 @@ function register(bot) {
         name: msg.from.first_name || "",
         username: msg.from.username || "",
       });
-      bot.sendMessage(msg.chat.id, buildSavedMessage(user), BACK_MENU);
+      const messageLanguage = user?.language || language;
+      bot.sendMessage(
+        msg.chat.id,
+        buildSavedMessage(user, messageLanguage),
+        getBackMenuKeyboard(messageLanguage)
+      );
       return;
     }
 
@@ -74,12 +81,14 @@ function register(bot) {
         name: msg.from.first_name || "",
         username: msg.from.username || "",
       });
-      bot.sendMessage(msg.chat.id, buildSavedMessage(user), BACK_MENU);
-      return;
+      const messageLanguage = user?.language || language;
+      bot.sendMessage(
+        msg.chat.id,
+        buildSavedMessage(user, messageLanguage),
+        getBackMenuKeyboard(messageLanguage)
+      );
     }
   });
 }
 
-module.exports = { register };
-
-
+module.exports = { register, requestContactKeyboard };

@@ -1,11 +1,81 @@
+# ====================================
+# 🧠 Core Node.js ignores
+# ====================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+dist/
+build/
+coverage/
+tmp/
+temp/
+
+# ====================================
+# ⚙️ Environment & runtime
+# ====================================
+.env
+.env.*.local
+.env.local
+.envrc
+*.pid
+*.seed
+*.pid.lock
+
+# ====================================
+# 🐳 Docker & Redis
+# ====================================
+docker-compose.override.yml
+docker-compose.debug.yml
+*.log
+redis-data/
+*.rdb
+
+# ====================================
+# 🧩 OS generated files
+# ====================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ====================================
+# 🧰 IDE / Editor settings
+# ====================================
+# VS Code — ignore everything except useful shared files
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+!.vscode/settings.json
+!.vscode/launch.json
+
+# JetBrains / WebStorm / PhpStorm
+.idea/
+*.iml
+
+# Visual Studio
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-.env
+# ====================================
+# 🧪 Test artifacts
+# ====================================
+coverage/
+*.lcov
+.nyc_output/
+
+# ====================================
+# 📦 App specific
+# ====================================
+# Cache or temporary data folders
+scripts/tmp/
+src/config/local.json
+src/config/secrets.json
+src/images/cache/
+
+# Ignore compiled language packs (if generated)
+src/i18n/*.compiled.json

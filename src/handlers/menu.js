@@ -1,20 +1,32 @@
-const BACK_MENU = {
-  reply_markup: {
-    keyboard: [["⬅️ Назад"], ["Головне меню"]],
-    resize_keyboard: true,
-  },
-};
+const path = require("path");
+const { storage } = require("../utils/storage");
+const { translate, isButtonMatch } = require("../i18n");
+
+const MENU_LINK =
+  "https://restoran126.choiceqr.com/delivery/section:snidanki/snidanki";
+const MENU_PHOTO_PATH = path.join(__dirname, "../images/food1.jpg");
 
 function register(bot) {
-  bot.on("message", (msg) => {
+  bot.on("message", async (msg) => {
     if (!msg.text) return;
-    if (msg.text === "🍽 Меню") {
-      bot.sendMessage(
-        msg.chat.id,
-        "Ось наше меню 🍽\n(Тут буде список категорій або посилання на меню)",
-        BACK_MENU
-      );
-    }
+    if (!isButtonMatch(msg.text, "menu")) return;
+
+    const language = await storage.getUserLanguage(msg.chat.id);
+
+    bot.sendPhoto(msg.chat.id, MENU_PHOTO_PATH, {
+      caption: translate(language, "menu.caption"),
+      parse_mode: "HTML",
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: translate(language, "menu.viewButton"),
+              url: MENU_LINK,
+            },
+          ],
+        ],
+      },
+    });
   });
 }
 

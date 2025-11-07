@@ -1,20 +1,18 @@
-const BACK_MENU = {
-  reply_markup: {
-    keyboard: [["⬅️ Назад"], ["Головне меню"]],
-    resize_keyboard: true,
-  },
-};
+const { storage } = require("../utils/storage");
+const { translate, getBackMenuKeyboard, isButtonMatch } = require("../i18n");
 
 function register(bot) {
-  bot.on("message", (msg) => {
+  bot.on("message", async (msg) => {
     if (!msg.text) return;
-    if (msg.text === "⭐ Система лояльності") {
-      bot.sendMessage(
-        msg.chat.id,
-        "Система лояльності ⭐\n— 5% кешбек бонусами\n— День народження: -10%\n— Спеціальні пропозиції для постійних гостей",
-        BACK_MENU
-      );
-    }
+    if (!isButtonMatch(msg.text, "loyalty")) return;
+
+    const language = await storage.getUserLanguage(msg.chat.id);
+
+    bot.sendMessage(
+      msg.chat.id,
+      translate(language, "loyalty.details"),
+      getBackMenuKeyboard(language)
+    );
   });
 }
 

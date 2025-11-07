@@ -1,38 +1,34 @@
-const BACK_MENU = {
-  reply_markup: {
-    keyboard: [["⬅️ Назад"], ["Головне меню"]],
-    resize_keyboard: true,
-  },
-};
-
-const LANGUAGE_MENU = {
-  reply_markup: {
-    keyboard: [["Українська", "English"], ["⬅️ Назад"], ["Головне меню"]],
-    resize_keyboard: true,
-  },
-};
+const { storage } = require("../utils/storage");
+const {
+  translate,
+  getLanguageMenuKeyboard,
+  getBackMenuKeyboard,
+  isButtonMatch,
+  normalizeLanguageSelection,
+} = require("../i18n");
 
 function register(bot) {
-  bot.on("message", (msg) => {
+  bot.on("message", async (msg) => {
     if (!msg.text) return;
 
-    if (msg.text === "🌐 Змінити мову") {
-      bot.sendMessage(msg.chat.id, "Оберіть мову інтерфейсу:", LANGUAGE_MENU);
-      return;
-    }
-
-    if (msg.text === "Українська") {
+    const selectedLanguage = normalizeLanguageSelection(msg.text);
+    if (selectedLanguage) {
+      await storage.setUserLanguage(msg.chat.id, selectedLanguage);
       bot.sendMessage(
         msg.chat.id,
-        "Мова встановлена: Українська 🇺🇦",
-        BACK_MENU
+        translate(selectedLanguage, "language.confirm"),
+        getBackMenuKeyboard(selectedLanguage)
       );
       return;
     }
 
-    if (msg.text === "English") {
-      bot.sendMessage(msg.chat.id, "Language set: English 🇬🇧", BACK_MENU);
-      return;
+    if (isButtonMatch(msg.text, "changeLanguage")) {
+      const language = await storage.getUserLanguage(msg.chat.id);
+      bot.sendMessage(
+        msg.chat.id,
+        translate(language, "language.prompt"),
+        getLanguageMenuKeyboard(language)
+      );
     }
   });
 }

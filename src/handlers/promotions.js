@@ -1,20 +1,18 @@
-const BACK_MENU = {
-  reply_markup: {
-    keyboard: [["⬅️ Назад"], ["Головне меню"]],
-    resize_keyboard: true,
-  },
-};
+const { storage } = require("../utils/storage");
+const { translate, getBackMenuKeyboard, isButtonMatch } = require("../i18n");
 
 function register(bot) {
-  bot.on("message", (msg) => {
+  bot.on("message", async (msg) => {
     if (!msg.text) return;
-    if (msg.text === "🎁 Акції") {
-      bot.sendMessage(
-        msg.chat.id,
-        'Поточні акції 🎁\n\n1. Глінтвейн за відмітку в сторіз 🍹\nВідпочивай у нас, відмічай це в сторіз у інстаграмі та показуй відмітку офіціанту — отримуй глінтвейн безкоштовно.\n\n2. Десерт в честь дня народження ❤️\nДеталі:\nПриходь у Felis 👉🏻 показуй свої документи 👉🏻 святкуй 🌿\n\n3. ФІРМОВА ПАЛЯНИЧКА ЗА ВІДГУК 🥗\nПиши у пошуку "Google" Ресторан Felis та залишай свій відгук на нашій сторінці, а потім приходь за своєю безкоштовною паляничкою.',
-        BACK_MENU
-      );
-    }
+    if (!isButtonMatch(msg.text, "promotions")) return;
+
+    const language = await storage.getUserLanguage(msg.chat.id);
+
+    bot.sendMessage(
+      msg.chat.id,
+      translate(language, "promotions.list"),
+      getBackMenuKeyboard(language)
+    );
   });
 }
 
