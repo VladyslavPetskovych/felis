@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { normalizePhone } = require("../utils/storage");
 
 const ADMIN_PHONES = (process.env.ADMIN_PHONES || "")
@@ -16,4 +17,3 @@ module.exports = {
   ADMIN_PHONES,
   isAdminPhone,
 };
-

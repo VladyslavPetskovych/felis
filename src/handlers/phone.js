@@ -1,11 +1,12 @@
 const { storage, normalizePhone } = require("../utils/storage");
 const {
   translate,
-  getBackMenuKeyboard,
+  getMainMenuKeyboard,
   getButtonLabel,
   isButtonMatch,
   DEFAULT_LANGUAGE,
 } = require("../i18n");
+const { isAdminPhone } = require("../config/admin");
 
 function requestContactKeyboard(language) {
   return {
@@ -35,7 +36,9 @@ function register(bot) {
     if (msg && msg._handledByAdmin) return;
 
     const text = msg.text || "";
-    const language = await storage.getUserLanguage(msg.chat.id);
+    const existingUser = await storage.getUser(msg.chat.id);
+    const language = existingUser?.language || DEFAULT_LANGUAGE;
+    const existingIsAdmin = isAdminPhone(existingUser?.phone);
 
     if (text === "/phone" || isButtonMatch(text, "leavePhone")) {
       bot.sendMessage(
@@ -53,7 +56,7 @@ function register(bot) {
         bot.sendMessage(
           msg.chat.id,
           translate(language, "phone.invalid"),
-          getBackMenuKeyboard(language)
+          getMainMenuKeyboard(language, { isAdmin: existingIsAdmin })
         );
         return;
       }
@@ -64,10 +67,12 @@ function register(bot) {
         username: msg.from.username || "",
       });
       const messageLanguage = user?.language || language;
+      const isAdmin = isAdminPhone(user?.phone);
+      const keyboard = getMainMenuKeyboard(messageLanguage, { isAdmin });
       bot.sendMessage(
         msg.chat.id,
         buildSavedMessage(user, messageLanguage),
-        getBackMenuKeyboard(messageLanguage)
+        keyboard
       );
       return;
     }
@@ -82,10 +87,12 @@ function register(bot) {
         username: msg.from.username || "",
       });
       const messageLanguage = user?.language || language;
+      const isAdmin = isAdminPhone(user?.phone);
+      const keyboard = getMainMenuKeyboard(messageLanguage, { isAdmin });
       bot.sendMessage(
         msg.chat.id,
         buildSavedMessage(user, messageLanguage),
-        getBackMenuKeyboard(messageLanguage)
+        keyboard
       );
     }
   });

@@ -1,4 +1,5 @@
 function register(bot) {
+  require("./specialUser").register(bot);
   require("./admin").register(bot);
   require("./menu").register(bot);
   require("./promotions").register(bot);

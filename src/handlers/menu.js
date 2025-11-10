@@ -3,7 +3,7 @@ const { storage } = require("../utils/storage");
 const { translate, isButtonMatch } = require("../i18n");
 
 const MENU_LINK =
-  "https://restoran126.choiceqr.com/delivery/section:snidanki/snidanki";
+  "https://restoran126.choiceqr.com/section:snidanki/snidanki";
 const MENU_PHOTO_PATH = path.join(__dirname, "../images/food1.jpg");
 
 function register(bot) {

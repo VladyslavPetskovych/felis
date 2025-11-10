@@ -2,10 +2,12 @@ const { storage } = require("../utils/storage");
 const {
   translate,
   getLanguageMenuKeyboard,
-  getBackMenuKeyboard,
+  getMainMenuKeyboard,
   isButtonMatch,
   normalizeLanguageSelection,
+  DEFAULT_LANGUAGE,
 } = require("../i18n");
+const { isAdminPhone } = require("../config/admin");
 
 function register(bot) {
   bot.on("message", async (msg) => {
@@ -13,17 +15,22 @@ function register(bot) {
 
     const selectedLanguage = normalizeLanguageSelection(msg.text);
     if (selectedLanguage) {
-      await storage.setUserLanguage(msg.chat.id, selectedLanguage);
+      const updatedUser = await storage.setUserLanguage(
+        msg.chat.id,
+        selectedLanguage
+      );
+      const isAdmin = isAdminPhone(updatedUser?.phone);
       bot.sendMessage(
         msg.chat.id,
         translate(selectedLanguage, "language.confirm"),
-        getBackMenuKeyboard(selectedLanguage)
+        getMainMenuKeyboard(selectedLanguage, { isAdmin })
       );
       return;
     }
 
     if (isButtonMatch(msg.text, "changeLanguage")) {
-      const language = await storage.getUserLanguage(msg.chat.id);
+      const user = await storage.getUser(msg.chat.id);
+      const language = user?.language || DEFAULT_LANGUAGE;
       bot.sendMessage(
         msg.chat.id,
         translate(language, "language.prompt"),

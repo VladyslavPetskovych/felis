@@ -39,11 +39,14 @@ const translations = {
         viewButton: "Переглянути меню",
       },
       promotions: {
-        list: 'Поточні акції 🎁\n\n1. Глінтвейн за відмітку в сторіз 🍹\nВідпочивай у нас, відмічай це в сторіз у інстаграмі та показуй відмітку офіціанту — отримуй глінтвейн безкоштовно.\n\n2. Десерт в честь дня народження ❤️\nДеталі:\nПриходь у Felis 👉🏻 показуй свої документи 👉🏻 святкуй 🌿\n\n3. ФІРМОВА ПАЛЯНИЧКА ЗА ВІДГУК 🥗\nПиши у пошуку "Google" Ресторан Felis та залишай свій відгук на нашій сторінці, а потім приходь за своєю безкоштовною паляничкою.',
+        list: 'Поточні акції 🎁\n\n1. Глінтвейн за відмітку в сторіз 🍹\nВідпочивай у нас, відмічай це в сторіз у інстаграмі та показуй відмітку офіціанту — отримуй глінтвейн безкоштовно.\n\n2. Десерт в честь дня народження ❤️\nДеталі:\nПриходь у Felis 👉🏻 показуй свої документи 👉🏻 святкуй 🌿\n\n3. ФІРМОВА ПАЛЯНИЧКА ЗА ВІДГУК 🥗\nПиши у пошуку "Google" Ресторан Felis та залишай свій відгук на нашій сторінці <b><a href="https://www.google.com/maps/place/Феліс/@49.8459642,24.0304369,21z/data=!4m8!3m7!1s0x473addd6402680cd:0x1a070492fe838bf5!8m2!3d49.8459503!4d24.0304678!9m1!1b1!16s%2Fg%2F11y4nc8lhl?entry=ttu&g_ep=EgoyMDI1MTEwNC4xIKXMDSoASAFQAw%3D%3D">(ЗАЛИШИТИ ВІДГУК)</a></b>, а потім приходь за своєю безкоштовною паляничкою.',
       },
       delivery: {
         details:
-          "Умови доставки 🚚\n— Час: 10:00–21:00\n— Вартість: від 60 грн (залежно від району)\n— Самовивіз: безкоштовно",
+          "Умови доставки 🚚\n— Час: 09:00–21:30\n— Вартість: від 60 грн (залежно від району)\n— Самовивіз: безкоштовно",
+        orderButton: "Зробити замовлення",
+        glovoButton: "Glovo",
+        boltButton: "Bolt Food",
       },
       feedback: {
         prompt:
@@ -126,11 +129,14 @@ const translations = {
         viewButton: "View menu",
       },
       promotions: {
-        list: 'Current promotions 🎁\n\n1. Mulled wine for an Instagram story mention 🍹\nVisit us, mention Felis in your story, show it to the waiter — and enjoy a free mulled wine.\n\n2. Complimentary birthday dessert ❤️\nDetails:\nCome to Felis 👉🏻 show your ID 👉🏻 celebrate 🌿\n\n3. SIGNATURE FLATBREAD FOR A REVIEW 🥗\nSearch for "Felis Restaurant" on Google, leave a review on our page, and then stop by for your free flatbread.',
+        list: 'Current promotions 🎁\n\n1. Mulled wine for an Instagram story mention 🍹\nVisit us, mention Felis in your story, show it to the waiter — and enjoy a free mulled wine.\n\n2. Complimentary birthday dessert ❤️\nDetails:\nCome to Felis 👉🏻 show your ID 👉🏻 celebrate 🌿\n\n3. SIGNATURE FLATBREAD FOR A REVIEW 🥗\nSearch for "Felis Restaurant" on Google, leave a review on our page <b><a href="https://www.google.com/maps/place/Феліс/@49.8459642,24.0304369,21z/data=!4m8!3m7!1s0x473addd6402680cd:0x1a070492fe838bf5!8m2!3d49.8459503!4d24.0304678!9m1!1b1!16s%2Fg%2F11y4nc8lhl?entry=ttu&g_ep=EgoyMDI1MTEwNC4xIKXMDSoASAFQAw%3D%3D">(LEAVE A REVIEW)</a></b>, and then stop by for your free flatbread.',
       },
       delivery: {
         details:
-          "Delivery terms 🚚\n— Time: 10:00–21:00\n— Cost: from 60 UAH (depends on district)\n— Pickup: free",
+          "Delivery terms 🚚\n— Time: 09:00–21:30\n— Cost: from 60 UAH (depends on district)\n— Pickup: free",
+        orderButton: "Order delivery",
+        glovoButton: "Glovo",
+        boltButton: "Bolt Food",
       },
       feedback: {
         prompt:
@@ -239,15 +245,6 @@ function getMainMenuKeyboard(lang, options = {}) {
   };
 }
 
-function getBackMenuKeyboard(lang) {
-  return {
-    reply_markup: {
-      keyboard: buildKeyboardFromKeys(lang, [["back"], ["mainMenu"]]),
-      resize_keyboard: true,
-    },
-  };
-}
-
 function getLanguageMenuKeyboard(lang) {
   return {
     reply_markup: {
@@ -304,7 +301,6 @@ module.exports = {
   translate,
   getButtonLabel,
   getMainMenuKeyboard,
-  getBackMenuKeyboard,
   getLanguageMenuKeyboard,
   getAdminMenuKeyboard,
   getLanguageName,
