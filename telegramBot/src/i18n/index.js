@@ -13,6 +13,7 @@ const translations = {
       loyalty: "⭐ Система лояльності",
       adminPanel: "🛠 Адмін панель",
       adminBroadcast: "📢 Створити оголошення",
+      adminExportPhones: "📞 Експорт номерів",
       adminCancel: "❌ Скасувати",
       back: "⬅️ Назад",
       mainMenu: "Головне меню",
@@ -84,6 +85,12 @@ const translations = {
         broadcastError:
           "⚠️ Не вдалося розіслати оголошення. Спробуйте пізніше.",
         broadcastCancelled: "ℹ️ Розсилку скасовано.",
+        exportPhonesEmpty:
+          "⚠️ Немає збережених номерів телефону для експорту.",
+        exportPhonesSuccess:
+          "✅ Номери експортовано. Всього записів: {{total}}, унікальних номерів: {{unique}}, дублікатів: {{duplicates}}.",
+        exportPhonesError:
+          "⚠️ Не вдалося створити файл з номерами. Спробуйте пізніше.",
       },
       languageNames: {
         uk: "Українська",
@@ -103,6 +110,7 @@ const translations = {
       loyalty: "⭐ Loyalty program",
       adminPanel: "🛠 Admin panel",
       adminBroadcast: "📢 Create announcement",
+      adminExportPhones: "📞 Export phones",
       adminCancel: "❌ Cancel",
       back: "⬅️ Back",
       mainMenu: "Main menu",
@@ -174,6 +182,12 @@ const translations = {
         broadcastError:
           "⚠️ Failed to send the announcement. Please try again later.",
         broadcastCancelled: "ℹ️ Broadcast cancelled.",
+        exportPhonesEmpty:
+          "⚠️ There are no saved phone numbers to export.",
+        exportPhonesSuccess:
+          "✅ Phone numbers exported. Total rows: {{total}}, unique numbers: {{unique}}, duplicates: {{duplicates}}.",
+        exportPhonesError:
+          "⚠️ Could not generate the file with phone numbers. Please try again later.",
       },
       languageNames: {
         uk: "Ukrainian",
@@ -263,6 +277,7 @@ function getAdminMenuKeyboard(lang) {
     reply_markup: {
       keyboard: buildKeyboardFromKeys(lang, [
         ["adminBroadcast"],
+        ["adminExportPhones"],
         ["adminCancel"],
         ["mainMenu"],
       ]),

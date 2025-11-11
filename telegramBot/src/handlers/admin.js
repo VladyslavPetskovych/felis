@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+const ExcelJS = require("exceljs");
 const { storage } = require("../utils/storage");
 const {
   translate,
@@ -7,6 +10,7 @@ const {
   DEFAULT_LANGUAGE,
 } = require("../i18n");
 const { isAdminPhone } = require("../config/admin");
+const { buildPhoneExport } = require("../utils/phoneExport");
 
 const adminStates = new Map();
 
@@ -46,6 +50,7 @@ async function handleBroadcast(bot, msg, language) {
   }
 
   try {
+    await bot.sendChatAction(chatId, "upload_document").catch(() => {});
     const users = await storage.getAllUsers();
     let success = 0;
     let failed = 0;
@@ -75,6 +80,79 @@ async function handleBroadcast(bot, msg, language) {
   }
 
   return true;
+}
+
+async function handleExportPhones(bot, chatId, language) {
+  try {
+    const users = await storage.getAllUsers();
+    const {
+      headers,
+      rows,
+      uniqueCount,
+      totalCount,
+      duplicateCount,
+    } = buildPhoneExport(users);
+
+    if (uniqueCount === 0) {
+      await bot.sendMessage(
+        chatId,
+        translate(language, "admin.exportPhonesEmpty"),
+        getAdminMenuKeyboard(language)
+      );
+      return true;
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Phones");
+
+    worksheet.addRow(headers);
+    worksheet.getRow(1).font = { bold: true };
+    rows.forEach((row) => {
+      worksheet.addRow(row);
+    });
+
+    for (let colIdx = 1; colIdx <= headers.length; colIdx += 1) {
+      const column = worksheet.getColumn(colIdx);
+      let maxLength = String(headers[colIdx - 1] || "").length;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const value =
+          cell.value === null || cell.value === undefined
+            ? ""
+            : String(cell.value);
+        maxLength = Math.max(maxLength, value.length);
+      });
+      column.width = Math.min(maxLength + 2, 40);
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const filename = `phones-${timestamp}.xlsx`;
+    const exportDir = path.join(process.cwd(), "exports");
+    const filePath = path.join(exportDir, filename);
+
+    fs.mkdirSync(exportDir, { recursive: true });
+    await workbook.xlsx.writeFile(filePath);
+
+    await bot.sendDocument(
+      chatId,
+      filePath,
+      {
+        caption: translate(language, "admin.exportPhonesSuccess", {
+          total: totalCount,
+          unique: uniqueCount,
+          duplicates: duplicateCount,
+        }),
+        ...getAdminMenuKeyboard(language),
+      }
+    );
+    return true;
+  } catch (error) {
+    await bot.sendMessage(
+      chatId,
+      translate(language, "admin.exportPhonesError"),
+      getAdminMenuKeyboard(language)
+    );
+    return false;
+  }
 }
 
 function register(bot) {
@@ -138,6 +216,12 @@ function register(bot) {
         keyboard
       );
       return;
+    }
+
+    if (isButtonMatch(text, "adminExportPhones")) {
+      markHandled(msg);
+      const handled = await handleExportPhones(bot, chatId, language);
+      if (handled) return;
     }
 
     if (isButtonMatch(text, "adminCancel")) {

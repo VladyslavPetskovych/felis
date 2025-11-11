@@ -19,6 +19,7 @@
   "homepage": "https://github.com/VladyslavPetskovych/felis#readme",
   "dependencies": {
     "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
     "ioredis": "^5.8.2",
     "node-telegram-bot-api": "^0.66.0"
   }
