@@ -1,0 +1,25 @@
+{
+  "name": "felis",
+  "version": "1.0.0",
+  "description": "��&\u00045\u00049\u0004 \u0000B\u00045\u0004;\u00045\u00043\u0004@\u00040\u0004<\u0004 \u00001\u0004>\u0004B\u0004 \u0000A\u0004B\u00042\u0004>\u0004@\u00045\u0004=\u00048\u00049\u0004 \u00004\u0004;\u0004O\u0004 \u0000H\u00042\u00048\u00044\u0004:\u0004>\u00043\u0004>\u0004 \u0000V\u0004 \u00007\u0004@\u0004C\u0004G\u0004=\u0004>\u00043\u0004>\u0004 \u00004\u0004>\u0004A\u0004B\u0004C\u0004?\u0004C\u0004 \u00004\u0004>\u0004 \u0000<\u00045\u0004=\u0004N\u0004,\u0000 \u00000\u0004:\u0004F\u0004V\u00049\u0004 \u0000V\u0004 \u00007\u00040\u0004<\u0004>\u00042\u0004;\u00045\u0004=\u0004L\u0004\r\u0000 \u0000",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladyslavPetskovych/felis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VladyslavPetskovych/felis/issues"
+  },
+  "homepage": "https://github.com/VladyslavPetskovych/felis#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "ioredis": "^5.8.2",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}

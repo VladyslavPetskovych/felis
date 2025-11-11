@@ -1,17 +1,33 @@
 name: felis-app
 
 services:
+  redis:
+    image: redis:8.0-rc1-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - felis-app
+    restart: unless-stopped
+
   tgbot:
     build:
       context: ./telegramBot
     environment:
       - BOT_TOKEN=${TG_BOT_TOKEN}
+      - REDIS_URL=${REDIS_URL}
+      - ADMIN_PHONES=${TG_BOT_ADMIN_PHONES}
+      - SPECIAL_USER_ID=${TG_BOT_SPECIAL_USER_ID}
     volumes:
       - ./telegramBot:/app
       - /app/node_modules
     networks:
       - felis-app
+    depends_on:
+      - redis
     restart: unless-stopped
+
+volumes: # /var/lib/docker
+  redis_data:
 
 networks:
   felis-app:
