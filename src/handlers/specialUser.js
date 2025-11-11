@@ -1,9 +1,15 @@
+const path = require("path");
 const {
   SPECIAL_USER_ID,
   SPECIAL_USER_PHONE,
   SPECIAL_USER_MESSAGE,
 } = require("../config/specialUser");
 const { storage, normalizePhone } = require("../utils/storage");
+
+const SPECIAL_USER_PHOTO_PATH = path.join(
+  __dirname,
+  "../images/roman.png"
+);
 
 async function isSpecialUser(entity, chatIdFromContext) {
   const userId = entity?.id ?? entity?.from?.id;
@@ -40,7 +46,9 @@ function register(bot) {
   bot.on("message", async (msg) => {
     if (!(await isSpecialUser(msg.from, msg.chat?.id))) return;
 
-    await bot.sendMessage(msg.chat.id, SPECIAL_USER_MESSAGE);
+    await bot.sendPhoto(msg.chat.id, SPECIAL_USER_PHOTO_PATH, {
+      caption: SPECIAL_USER_MESSAGE,
+    });
   });
 
   bot.on("callback_query", async (query) => {
@@ -49,7 +57,9 @@ function register(bot) {
 
     if (!chatId) return;
 
-    await bot.sendMessage(chatId, SPECIAL_USER_MESSAGE);
+    await bot.sendPhoto(chatId, SPECIAL_USER_PHOTO_PATH, {
+      caption: SPECIAL_USER_MESSAGE,
+    });
   });
 }
 
