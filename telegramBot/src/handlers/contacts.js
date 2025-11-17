@@ -1,3 +1,4 @@
+const path = require("path");
 const { storage } = require("../utils/storage");
 const {
   translate,
@@ -6,6 +7,8 @@ const {
   DEFAULT_LANGUAGE,
 } = require("../i18n");
 const { isAdminPhone } = require("../config/admin");
+
+const CONTACT_VIDEO_PATH = path.join(__dirname, "../images/Felis Contact.mp4");
 
 function register(bot) {
   bot.on("message", async (msg) => {
@@ -18,14 +21,10 @@ function register(bot) {
     const options = {
       ...getMainMenuKeyboard(language, { isAdmin }),
       parse_mode: "HTML",
-      disable_web_page_preview: true,
+      caption: translate(language, "contacts.details"),
     };
 
-    bot.sendMessage(
-      msg.chat.id,
-      translate(language, "contacts.details"),
-      options
-    );
+    bot.sendVideo(msg.chat.id, CONTACT_VIDEO_PATH, options);
   });
 }
 
